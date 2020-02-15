@@ -2,34 +2,69 @@
 # -*- coding: utf-8 -*-
 # This program is dedicated to the public domain under the CC0 license.
 
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
+from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove, Bot)
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
-                          ConversationHandler)
+                          CallbackContext)
 from dateutil.relativedelta import relativedelta
 import datetime
 
-def calcular_tiempo(update, context):
+from datetime import timedelta
+from threading import Timer
+import threading
+import time
 
-    today = datetime.date.today()
-    rd = relativedelta(datetime.date(2020,5,31),today)
+class Threading(object):
+    """ Threading example class
+    The run() method will be started and it will run in the background
+    until the application exits.
+    """
+
+    def __init__(self, interval=1):
+        """ Constructor
+        :type interval: int
+        :param interval: Check interval, in seconds
+        """
+        self.interval = interval
+
+        thread = threading.Thread(target=self.run, args=())
+        thread.daemon = True                            # Daemonize thread
+        thread.start()                                  # Start the execution
+
+    def run(self):
+        while True:
+            t = datetime.datetime.today()
+            future = datetime.datetime(t.year,t.month,t.day,10,00,00)
+            time.sleep((future-t).seconds)
+            time_left_schedule()
+            time.sleep(5)
+
+def time_left_schedule():
+    bot = Bot("1019768677:AAEWtgK_Sg7mMKjGn3jQVudKEmMuVhjbYN8")
+    today = datetime.datetime.today()
+    rd = relativedelta(datetime.datetime(2020,5,31,10,00,00),today)
+
+    bot.sendMessage("-326329345","Quedan %(months)d meses, %(days)d dias, %(hours)d horas, %(minutes)d minutos y %(seconds)d segundos para que IBM se haga con el poder, ha sido un placer amigos" % rd.__dict__ )
+
+def time_left_reply(update, context):
+
+    today = datetime.datetime.today()
+    rd = relativedelta(datetime.datetime(2020,5,31,10,00,00),today)
 
     update.message.reply_text(
-        'Quedan %(months)d meses y %(days)d dias, ha sido un placer amigos' % rd.__dict__ )
-
-    return true
+        'Quedan %(months)d meses, %(days)d dias, %(hours)d horas, %(minutes)d minutos y %(seconds)d segundos para que IBM se haga con el poder, ha sido un placer amigos' % rd.__dict__ )
 
 def main():
+
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
     updater = Updater("1019768677:AAEWtgK_Sg7mMKjGn3jQVudKEmMuVhjbYN8", use_context=True)
+    tr = Threading()
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
-    handler = MessageHandler(Filters.regex('IBM'), calcular_tiempo)
-
-    dp.add_handler(handler)
+    dp.add_handler(MessageHandler(Filters.regex('IBM'), time_left_reply))
 
     # Start the Bot
     updater.start_polling()
