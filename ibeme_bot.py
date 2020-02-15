@@ -13,6 +13,9 @@ from threading import Timer
 import threading
 import time
 
+TOKEN="1019768677:AAEWtgK_Sg7mMKjGn3jQVudKEmMuVhjbYN8"
+CHAT="-326329345"
+
 class Threading(object):
     """ Threading example class
     The run() method will be started and it will run in the background
@@ -39,11 +42,11 @@ class Threading(object):
             time.sleep(5)
 
 def time_left_schedule():
-    bot = Bot("1019768677:AAEWtgK_Sg7mMKjGn3jQVudKEmMuVhjbYN8")
+    bot = Bot(TOKEN)
     today = datetime.datetime.today()
     rd = relativedelta(datetime.datetime(2020,5,31,10,00,00),today)
 
-    bot.sendMessage("-326329345","Quedan %(months)d meses, %(days)d dias, %(hours)d horas, %(minutes)d minutos y %(seconds)d segundos para que IBM se haga con el poder, ha sido un placer amigos" % rd.__dict__ )
+    bot.sendMessage(CHAT,"Quedan %(months)d meses, %(days)d dias, %(hours)d horas, %(minutes)d minutos y %(seconds)d segundos para que IBM se haga con el poder, ha sido un placer amigos" % rd.__dict__ )
 
 def time_left_reply(update, context):
 
@@ -58,7 +61,7 @@ def main():
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
-    updater = Updater("1019768677:AAEWtgK_Sg7mMKjGn3jQVudKEmMuVhjbYN8", use_context=True)
+    updater = Updater(TOKEN, use_context=True)
     tr = Threading()
 
     # Get the dispatcher to register handlers
